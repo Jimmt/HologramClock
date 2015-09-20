@@ -1,24 +1,46 @@
 package com.jimmt.HologramClock;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class Tile extends Group {
 	Image background;
+	DisplayEffect effect;
+	int index;
 
-	public Tile(DisplayEffect effect) {
-		ParticleEffectActor actor = new ParticleEffectActor(effect.getPath(), effect.getPath()
-				+ "/..");
+	public Tile(DisplayEffect effect, int index) {
+		this.effect = effect;
+		this.index = index;
+		
+		ParticleEffectActor actor = new ParticleEffectActor(effect.getPaths()[index], "effects");
 		ParticleEffect particleEffect = actor.effect;
-		for (int i = 0; i < particleEffect.getEmitters().size; i++) {
-			particleEffect.getEmitters().get(i).getScale().setHigh(100f);
-		}
 		
 		background = new Image(Assets.getTex("tile.png"));
-		actor.setPosition(getWidth() / 2, getHeight() / 2);
+		
+		float scale = 1 / 4f;
+		for (int i = 0; i < particleEffect.getEmitters().size; i++) {
+			particleEffect.getEmitters().get(i).getScale().setHigh(particleEffect.getEmitters().get(i).getScale().getHighMax() * scale);
+			particleEffect.getEmitters().get(i).getVelocity().setHigh(particleEffect.getEmitters().get(i).getVelocity().getHighMax() * scale);
+			
+			if(particleEffect.getEmitters().get(i).getXOffsetValue().getLowMin() != 0){
+				particleEffect.getEmitters().get(i).getXOffsetValue().setLow(-getWidth() / 3, getWidth() / 3);
+			}
+		}
+		
+		
+//		ParticleEmitter firstEmitter = particleEffect.getEmitters().get(0);
+//		float verticalDistance = firstEmitter.getVelocity().getHighMax() * (firstEmitter.getLife().getHighMax() - firstEmitter.getLife().getHighMin()) / 200f;
+//		System.out.println(firstEmitter.getVelocity().getHighMax() + " " + (firstEmitter.getLife().getHighMax() - firstEmitter.getLife().getHighMin()) / 2);
+		
+		actor.setPosition(getWidth() / 2, getHeight() / 3);
 		addActor(background);
 		addActor(actor);
+	}
+	
+	public int getIndex(){
+		return index;
 	}
 	
 	@Override

@@ -1,8 +1,10 @@
 package com.jimmt.HologramClock;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,27 +21,39 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 
 public class BaseScreen implements Screen {
 	Stage stage;
+	Stage uiStage;
 	Skin skin;
+	BitmapFont geosanslight, fontSmall;
 	SettingsDialog settingsDialog;
 	TimeDisplay[] displays = new TimeDisplay[4];
+	float[] rotations = { 0, 90, -90, 180 };
+
 	int hour, day, month, year, minute, second;
 	boolean militaryTime;
 
 	public BaseScreen(HologramClock main) {
+		militaryTime = Prefs.prefs.getBoolean("militaryTime");
+
 		stage = new Stage(new FillViewport(Constants.WIDTH, Constants.HEIGHT));
+		uiStage = new Stage(new FillViewport(Constants.WIDTH, Constants.HEIGHT));
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-				Gdx.files.internal("Cyberfunk.ttf"));
+				Gdx.files.internal("GeosansLight.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 100;
-		BitmapFont font = generator.generateFont(parameter);
+		parameter.size = 105;
+		parameter.borderWidth = 3;
+		geosanslight = generator.generateFont(parameter);
+		parameter.borderWidth = 0;
+		parameter.size = 40;
+		fontSmall = generator.generateFont(parameter);
 		generator.dispose();
 
-		float[] rotations = { 0, 90, -90, 180 };
-
-		for (int i = 0; i < 4; i++) {    
-			displays[i] = new TimeDisplay(font, DisplayEffect.YINYANG, rotations[i], i == 1 || i == 2);
+		int initialSelection = Prefs.prefs.getInteger("displayIndex");
+		DisplayEffect effect = null;
+		effect = DisplayEffect.values()[initialSelection];
+		for (int i = 0; i < 4; i++) {
+			displays[i] = new TimeDisplay(geosanslight, effect, rotations[i], i == 1 || i == 2);
 			displays[i].setPosition(Constants.WIDTH / 2, Constants.HEIGHT / 2);
 			stage.addActor(displays[i]);
 		}
@@ -48,14 +62,14 @@ public class BaseScreen implements Screen {
 
 		float box = 144f;
 		float buffer = 200f;
-		
-		Gdx.input.setInputProcessor(stage);
+
+		Gdx.input.setInputProcessor(new InputMultiplexer(uiStage, stage));
 
 		addIcon();
-		
-		settingsDialog = new SettingsDialog(skin);
-//		settingsDialog.setVisible(false);
-//		stage.addActor(settingsDialog);
+
+		settingsDialog = new SettingsDialog(skin, initialSelection, this);
+// settingsDialog.setVisible(false);
+// stage.addActor(settingsDialog);
 	}
 
 	public void addIcon() {
@@ -64,11 +78,20 @@ public class BaseScreen implements Screen {
 		icon.setSize(128, 128);
 		icon.setPosition(Constants.WIDTH / 2 - icon.getWidth() / 2,
 				Constants.HEIGHT / 2 - icon.getHeight() / 2);
-		icon.addListener(new ClickListener(){
-			public void clicked(InputEvent event, float x, float y){
-				settingsDialog.show(stage);
+		icon.addListener(new ClickListener() {
+			public void clicked(InputEvent event, float x, float y) {
+				settingsDialog.show(uiStage);
 			}
 		});
+	}
+
+	public void switchEffect(DisplayEffect effect) {
+		for (int i = 0; i < 4; i++) {
+			stage.getActors().removeValue(displays[i], false);
+			displays[i] = new TimeDisplay(geosanslight, effect, rotations[i], i == 1 || i == 2);
+			displays[i].setPosition(Constants.WIDTH / 2, Constants.HEIGHT / 2);
+			stage.addActor(displays[i]);
+		}
 	}
 
 	public void rotateEffect(ParticleEffect effect, float deg) {
@@ -86,6 +109,9 @@ public class BaseScreen implements Screen {
 			hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 		} else {
 			hour = Calendar.getInstance().get(Calendar.HOUR);
+			if(hour == 0){
+				hour = 12;
+			}
 		}
 
 		day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
@@ -93,6 +119,11 @@ public class BaseScreen implements Screen {
 		year = Calendar.getInstance().get(Calendar.YEAR);
 		minute = Calendar.getInstance().get(Calendar.MINUTE);
 		second = Calendar.getInstance().get(Calendar.SECOND);
+		
+		hour = 12;
+		month = 0;
+		minute = 0;
+		second = 0;
 	}
 
 	public void updateDisplays() {
@@ -109,6 +140,8 @@ public class BaseScreen implements Screen {
 
 		stage.act(delta);
 		stage.draw();
+		uiStage.act(delta);
+		uiStage.draw();
 
 		updateTime();
 		updateDisplays();

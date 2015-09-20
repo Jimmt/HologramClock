@@ -6,10 +6,19 @@ import com.badlogic.gdx.Preferences;
 public class Prefs {
 	static Preferences prefs;
 
-	public static void init(){
+	public static void init() {
 		prefs = Gdx.app.getPreferences("prefs");
-		prefs.putBoolean("militaryTime", false);
-		prefs.putString("display", "whisper");
-		prefs.putString("font", "Cyberfunk");
+		
+		if (!prefs.contains("display")) {
+			prefs.putBoolean("militaryTime", false);
+			prefs.flush();
+		}
+		if(!prefs.contains("displayIndex")){
+			prefs.putInteger("displayIndex", 0);
+		}
+		if(!prefs.contains("effectIndex")){
+			prefs.putInteger("effectIndex", 0);
+			prefs.flush();
+		}
 	}
 }

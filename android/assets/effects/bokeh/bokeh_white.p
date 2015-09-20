@@ -10,8 +10,8 @@ max: 200
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 20.0
-highMax: 20.0
+highMin: 10.0
+highMax: 10.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -20,8 +20,8 @@ timeline0: 0.0
 - Life - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 1000.0
-highMax: 1200.0
+highMin: 3000.0
+highMax: 3000.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
@@ -34,7 +34,16 @@ timeline2: 1.0
 - Life Offset - 
 active: false
 - X Offset - 
-active: false
+active: true
+lowMin: -200.0
+lowMax: 200.0
+highMin: 0.0
+highMax: 0.0
+relative: false
+scalingCount: 1
+scaling0: 1.0
+timelineCount: 1
+timeline0: 0.0
 - Y Offset - 
 active: true
 lowMin: 0.0
@@ -71,43 +80,43 @@ timeline0: 0.0
 - Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 300.0
-highMax: 300.0
+highMin: 10.0
+highMax: 100.0
 relative: false
 scalingCount: 4
-scaling0: 1.0
-scaling1: 0.64705884
-scaling2: 0.3137255
+scaling0: 0.0
+scaling1: 0.98039216
+scaling2: 1.0
 scaling3: 0.0
 timelineCount: 4
 timeline0: 0.0
-timeline1: 0.16438356
-timeline2: 0.4041096
+timeline1: 0.21917808
+timeline2: 0.9726027
 timeline3: 1.0
 - Velocity - 
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 200.0
-highMax: 300.0
-relative: false
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
-- Angle - 
-active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 80.0
-highMax: 110.0
+highMin: 50.0
+highMax: 100.0
 relative: false
 scalingCount: 2
 scaling0: 1.0
 scaling1: 1.0
 timelineCount: 2
 timeline0: 0.0
-timeline1: 1.0
+timeline1: 0.9726027
+- Angle - 
+active: true
+lowMin: 0.0
+lowMax: 0.0
+highMin: 90.0
+highMax: 90.0
+relative: false
+scalingCount: 1
+scaling0: 1.0
+timelineCount: 1
+timeline0: 0.0
 - Rotation - 
 active: false
 - Wind - 
@@ -116,12 +125,12 @@ active: false
 active: false
 - Tint - 
 colorsCount: 6
-colors0: 1.0
-colors1: 0.047058824
-colors2: 0.047058824
-colors3: 0.0
-colors4: 0.0
-colors5: 0.0
+colors0: 0.9490196
+colors1: 0.9490196
+colors2: 0.9490196
+colors3: 0.78431374
+colors4: 0.78431374
+colors5: 0.78431374
 timelineCount: 2
 timeline0: 0.0
 timeline1: 1.0
@@ -133,21 +142,22 @@ highMax: 1.0
 relative: false
 scalingCount: 5
 scaling0: 1.0
-scaling1: 0.7894737
+scaling1: 1.0
 scaling2: 1.0
-scaling3: 0.7368421
+scaling3: 1.0
 scaling4: 1.0
 timelineCount: 5
 timeline0: 0.0
-timeline1: 0.23972602
+timeline1: 0.21232876
 timeline2: 0.46575344
-timeline3: 0.82191783
+timeline3: 0.7876712
 timeline4: 1.0
 - Options - 
 attached: false
 continuous: true
 aligned: false
-additive: false
+additive: true
 behind: false
+premultipliedAlpha: false
 - Image Path -
-C:\Users\Austin\workspace\TutorialProject\android\assets\effects\particle_big.png
+circle.png

@@ -6,6 +6,8 @@ public class HologramClock extends Game {
 
 	@Override
 	public void create() {
+		Prefs.init();
+		
 		setScreen(new BaseScreen(this));
 	}
 
