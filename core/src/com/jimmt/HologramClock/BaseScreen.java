@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -23,7 +21,7 @@ public class BaseScreen implements Screen {
 	Stage stage;
 	Stage uiStage;
 	Skin skin;
-	BitmapFont geosanslight, fontSmall;
+	BitmapFont fontBig, fontSmall;
 	SettingsDialog settingsDialog;
 	TimeDisplay[] displays = new TimeDisplay[4];
 	float[] rotations = { 0, 90, -90, 180 };
@@ -38,30 +36,30 @@ public class BaseScreen implements Screen {
 		uiStage = new Stage(new FillViewport(Constants.WIDTH, Constants.HEIGHT));
 		skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-				Gdx.files.internal("GeosansLight.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 105;
-		parameter.borderWidth = 3;
-		geosanslight = generator.generateFont(parameter);
-		parameter.borderWidth = 0;
-		parameter.size = 40;
-		fontSmall = generator.generateFont(parameter);
-		generator.dispose();
+//		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
+//				Gdx.files.internal("GeosansLight.ttf"));
+//		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+//		parameter.size = 105;
+//		parameter.borderWidth = 3;
+//		geosanslight = generator.generateFont(parameter);
+//		parameter.borderWidth = 0;
+//		parameter.size = 40;
+//		fontSmall = generator.generateFont(parameter);
+//		generator.dispose();
+		
+		fontBig = new BitmapFont(Gdx.files.internal("geosanslight_big.fnt"));
+		fontSmall = new BitmapFont(Gdx.files.internal("geosanslight_small.fnt"));
 
 		int initialSelection = Prefs.prefs.getInteger("displayIndex");
 		DisplayEffect effect = null;
 		effect = DisplayEffect.values()[initialSelection];
 		for (int i = 0; i < 4; i++) {
-			displays[i] = new TimeDisplay(geosanslight, effect, rotations[i], i == 1 || i == 2);
+			displays[i] = new TimeDisplay(fontBig, effect, rotations[i], i == 1 || i == 2);
 			displays[i].setPosition(Constants.WIDTH / 2, Constants.HEIGHT / 2);
 			stage.addActor(displays[i]);
 		}
 
 		updateTime();
-
-		float box = 144f;
-		float buffer = 200f;
 
 		Gdx.input.setInputProcessor(new InputMultiplexer(uiStage, stage));
 
@@ -88,7 +86,7 @@ public class BaseScreen implements Screen {
 	public void switchEffect(DisplayEffect effect) {
 		for (int i = 0; i < 4; i++) {
 			stage.getActors().removeValue(displays[i], false);
-			displays[i] = new TimeDisplay(geosanslight, effect, rotations[i], i == 1 || i == 2);
+			displays[i] = new TimeDisplay(fontBig, effect, rotations[i], i == 1 || i == 2);
 			displays[i].setPosition(Constants.WIDTH / 2, Constants.HEIGHT / 2);
 			stage.addActor(displays[i]);
 		}
@@ -120,10 +118,10 @@ public class BaseScreen implements Screen {
 		minute = Calendar.getInstance().get(Calendar.MINUTE);
 		second = Calendar.getInstance().get(Calendar.SECOND);
 		
-		hour = 12;
-		month = 0;
-		minute = 0;
-		second = 0;
+//		hour = 12;
+//		month = 0;
+//		minute = 0;
+//		second = 0;
 	}
 
 	public void updateDisplays() {
