@@ -1,13 +1,15 @@
 package com.jimmt.HologramClock;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 
 public class HologramClock extends Game {
 
 	@Override
 	public void create() {
 		Prefs.init();
-		
+
 		setScreen(new BaseScreen(this));
 	}
 
